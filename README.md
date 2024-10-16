@@ -64,3 +64,21 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+pw forge install OpenZeppelin/openzeppelin-contracts@v5.0.2 --no-commit
+pw forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v5.0.2 --no-commit
+pw forge install https://github.com/LayerZero-Labs/devtools --no-commit
+pw forge install https://github.com/LayerZero-Labs/layerzero-v2 --no-commit
+pw forge install https://github.com/GNSPS/solidity-bytes-utils
+pw forge install https://github.com/GNSPS/solidity-bytes-utils --no-commit
+pw forge build
+
+forge script script/MyAdapter.s.sol --rpc-url https://rpc.sepolia.org/ --broadcast
+
+// For Mantle
+forge script script/MyOFT.s.sol --rpc-url https://rpc.sepolia.mantle.xyz --broadcast 
+// For OP
+forge script script/MyOFT.s.sol --rpc-url https://sepolia.optimism.io --broadcast 
+
+forge script script/Bridge.s.sol -s "setPeer()" --rpc-url https://rpc.sepolia.org/ --broadcast
+forge script script/Bridge.s.sol -s "bridge()" --rpc-url https://rpc.sepolia.org/ --broadcast
