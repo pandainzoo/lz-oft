@@ -65,20 +65,28 @@ $ anvil --help
 $ cast --help
 ```
 
+```
+# add deps
 pw forge install OpenZeppelin/openzeppelin-contracts@v5.0.2 --no-commit
 pw forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v5.0.2 --no-commit
 pw forge install https://github.com/LayerZero-Labs/devtools --no-commit
 pw forge install https://github.com/LayerZero-Labs/layerzero-v2 --no-commit
-pw forge install https://github.com/GNSPS/solidity-bytes-utils
 pw forge install https://github.com/GNSPS/solidity-bytes-utils --no-commit
-pw forge build
 
+# deploy sepolia adapter
 forge script script/MyAdapter.s.sol --rpc-url https://rpc.sepolia.org/ --broadcast
 
+# deploy oft in dst chain
 // For Mantle
 forge script script/MyOFT.s.sol --rpc-url https://rpc.sepolia.mantle.xyz --broadcast 
 // For OP
 forge script script/MyOFT.s.sol --rpc-url https://sepolia.optimism.io --broadcast 
 
+# config adapter
 forge script script/Bridge.s.sol -s "setPeer()" --rpc-url https://rpc.sepolia.org/ --broadcast
+# token cross chain
 forge script script/Bridge.s.sol -s "bridge()" --rpc-url https://rpc.sepolia.org/ --broadcast
+
+# query result
+cast call 0xA908254Fb22F0FCc29880f9A08F29eB48F013bad "balanceOf(address) (uint256)" 0x1220d2767171ea3a6F4a545efF23efaad4C80221  --rpc-url  https://sepolia.optimism.io
+```

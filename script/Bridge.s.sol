@@ -12,16 +12,12 @@ interface IAdapter is IOAppCore, IOFT {}
 contract SendOFTScript is Script { 
     using OptionsBuilder for bytes; 
  
-    //uint32 constant MANTLE_ENPOINT_ID = 40246; // mantle
-    uint32 constant MANTLE_ENPOINT_ID = 40232; // op
-    address constant SEPOLIA_MY_TOKEN = 0x49Da2478f5a3eE8f82aE569fFFe3Ce21Aa16E3f0;
+    uint256 DST_ENDPOINT_ID = vm.envUint("DST_ENDPOINT_ID");
+    address SEPOLIA_TEST_TOKEN = vm.envAddress( "SEPOLIA_TEST_TOKEN" );
+    address SEPOLIA_ADAPTER_ADDRESS = vm.envAddress( "SEPOLIA_ADAPTER_ADDRESS" ); 
+    address DST_OFT_ADDRESS = vm.envAddress("DST_OFT_ADDRESS"); 
 
     function setPeer() external { 
-        address SEPOLIA_ADAPTER_ADDRESS = vm.envAddress( 
-            "SEPOLIA_ADAPTER_ADDRESS" 
-        ); 
-        address MANTLE_OFT_ADDRESS = vm.envAddress("MANTLE_OFT_ADDRESS"); 
- 
         uint256 privateKey = vm.envUint("PRIVATE_KEY"); 
         vm.startBroadcast(privateKey); 
  
@@ -30,18 +26,13 @@ contract SendOFTScript is Script {
  
         // Hook up Sepolia Adapter to Mantle's OFT 
         sepoliaAdapter.setPeer( 
-            MANTLE_ENPOINT_ID, 
-            bytes32(uint256(uint160(MANTLE_OFT_ADDRESS))) 
+            uint32(DST_ENDPOINT_ID), 
+            bytes32(uint256(uint160(DST_OFT_ADDRESS))) 
         ); 
     } 
 
 
     function bridge() external { 
-        address SEPOLIA_ADAPTER_ADDRESS = vm.envAddress( 
-            "SEPOLIA_ADAPTER_ADDRESS" 
-        ); 
-        address MANTLE_OFT_ADDRESS = vm.envAddress("MANTLE_OFT_ADDRESS"); 
- 
         uint256 privateKey = vm.envUint("PRIVATE_KEY"); 
         vm.startBroadcast(privateKey); 
         address signer = vm.addr(privateKey); 
@@ -57,7 +48,7 @@ contract SendOFTScript is Script {
             .addExecutorLzReceiveOption(200000, 0); 
  
         SendParam memory sendParam = SendParam( 
-            MANTLE_ENPOINT_ID, 
+            uint32(DST_ENDPOINT_ID), 
             bytes32(uint256(uint160(signer))), 
             tokensToSend, 
             tokensToSend, 
@@ -71,7 +62,7 @@ contract SendOFTScript is Script {
         console.log("Native fee: %d", fee.nativeFee); 
  
         // Approve the OFT contract to spend UNI tokens 
-        IERC20(SEPOLIA_MY_TOKEN).approve( 
+        IERC20(SEPOLIA_TEST_TOKEN).approve( 
             SEPOLIA_ADAPTER_ADDRESS, 
             tokensToSend 
         ); 
