@@ -9,7 +9,7 @@ contract MyOFTScript is Script {
         // Setup 
         address SEPOLIA_ADAPTER_ADDRESS = vm.envAddress("SEPOLIA_ADAPTER_ADDRESS");
         uint256 SEPOLIA_ENDPOINT_ID = vm.envUint("SEPOLIA_ENDPOINT_ID");
-        address SEPOLIA_LAYERZERO_ENDPOINT = vm.envAddress("SEPOLIA_LAYERZERO_ENDPOINT");
+        address DST_LAYERZERO_ENDPOINT = vm.envAddress("DST_LAYERZERO_ENDPOINT");
 
         uint256 privateKey = vm.envUint("PRIVATE_KEY"); 
         vm.startBroadcast(privateKey); 
@@ -18,7 +18,7 @@ contract MyOFTScript is Script {
         MyOFT myOFT = new MyOFT( 
             "Layer Zero TEST", 
             "lzTEST", 
-            SEPOLIA_LAYERZERO_ENDPOINT, 
+            DST_LAYERZERO_ENDPOINT, 
             vm.addr(privateKey) // Wallet address of signer 
         ); 
  

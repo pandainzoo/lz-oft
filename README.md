@@ -89,4 +89,52 @@ forge script script/Bridge.s.sol -s "bridge()" --rpc-url https://rpc.sepolia.org
 
 # query result
 cast call 0xA908254Fb22F0FCc29880f9A08F29eB48F013bad "balanceOf(address) (uint256)" 0x1220d2767171ea3a6F4a545efF23efaad4C80221  --rpc-url  https://sepolia.optimism.io
+
+# get ethereum config send lib
+forge script script/Config.s.sol -s "getConfig(address,address,address,uint32)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x2838479f0dbb534D315Ad24e0855a89230866044 0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE 40246 --rpc-url https://rpc.sepolia.org
+== Logs ==
+  confirmations: 2
+  requiredDVNCount: 1
+  optionalDVNCount: 0
+  optionalDVNThreshold: 0
+  requiredDVNs
+  0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193
+  optionalDVNs
+
+# get ethereum config receive lib
+forge script script/Config.s.sol -s "getConfig(address,address,address,uint32)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x2838479f0dbb534D315Ad24e0855a89230866044 0xdAf00F5eE2158dD58E0d3857851c432E34A3A851 40246 --rpc-url https://rpc.sepolia.org
+== Logs ==
+  confirmations: 16
+  requiredDVNCount: 1
+  optionalDVNCount: 0
+  optionalDVNThreshold: 0
+  requiredDVNs:
+  0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193
+  optionalDVNs:
+
+# get mantle config send lib
+forge script script/Config.s.sol -s "getConfig(address,address,address,uint32)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x7AE0a4846d6af3B82A5bd0F7a6a362784d9a2157 0x8A3D588D9f6AC041476b094f97FF94ec30169d3D 40161 --rpc-url https://rpc.sepolia.mantle.xyz
+== Logs ==
+  confirmations: 2
+  requiredDVNCount: 1
+  optionalDVNCount: 0
+  optionalDVNThreshold: 0
+  requiredDVNs
+  0x9454f0EABc7C4Ea9ebF89190B8bF9051A0468E03
+  optionalDVNs
+
+# query mainnet data
+forge script script/Config.s.sol -s "getConfig(address,address,address,uint32)" 0x1a44076050125825900e736c501f859c50fE728c 0xC14459931cF666DCcAd582D63288AefB9f0bDca9 0xbB2Ea70C9E858123480642Cf96acbcCE1372dCe1 30181 --rpc-url https://rpc.ankr.com/eth
+
+# ethereum set config for send lib
+forge script script/Config.s.sol -s "setConfig(address,address,address,address[],uint32,uint64)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x2838479f0dbb534D315Ad24e0855a89230866044 0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE \[0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193\] 40246 16 --rpc-url https://rpc.sepolia.org --broadcast
+
+# ethereum set config for receive lib
+forge script script/Config.s.sol -s "setConfig(address,address,address,address[],uint32,uint64)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x2838479f0dbb534D315Ad24e0855a89230866044 0xdAf00F5eE2158dD58E0d3857851c432E34A3A851 \[0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193\] 40246 16 --rpc-url https://rpc.sepolia.org --broadcast 
+
+# mantle set config for send lib
+forge script script/Config.s.sol -s "setConfig(address,address,address,address[],uint32,uint64)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x7AE0a4846d6af3B82A5bd0F7a6a362784d9a2157 0x9A289B849b32FF69A95F8584a03343a33Ff6e5Fd \[0x9454f0EABc7C4Ea9ebF89190B8bF9051A0468E03\] 40161 96 --rpc-url https://rpc.sepolia.mantle.xyz --broadcast
+
+# mantle set config for receive lib
+forge script script/Config.s.sol -s "setConfig(address,address,address,address[],uint32,uint64)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x7AE0a4846d6af3B82A5bd0F7a6a362784d9a2157 0x8A3D588D9f6AC041476b094f97FF94ec30169d3D \[0x9454f0EABc7C4Ea9ebF89190B8bF9051A0468E03\] 40161 96 --rpc-url https://rpc.sepolia.mantle.xyz --broadcast 
 ```
