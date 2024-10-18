@@ -12,6 +12,7 @@ interface IAdapter is IOAppCore, IOFT {}
 contract SendOFTScript is Script { 
     using OptionsBuilder for bytes; 
  
+    uint256 SEPOLIA_ENDPOINT_ID = vm.envUint("SEPOLIA_ENDPOINT_ID");
     uint256 DST_ENDPOINT_ID = vm.envUint("DST_ENDPOINT_ID");
     address SEPOLIA_TEST_TOKEN = vm.envAddress( "SEPOLIA_TEST_TOKEN" );
     address SEPOLIA_ADAPTER_ADDRESS = vm.envAddress( "SEPOLIA_ADAPTER_ADDRESS" ); 
@@ -69,6 +70,41 @@ contract SendOFTScript is Script {
  
         // Send the tokens 
         sepoliaAdapter.send{value: fee.nativeFee}(sendParam, fee, signer); 
+ 
+        console.log("Tokens bridged successfully!"); 
+    } 
+
+    function bridgeToL1() external { 
+        uint256 privateKey = vm.envUint("PRIVATE_KEY"); 
+        vm.startBroadcast(privateKey); 
+        address signer = vm.addr(privateKey); 
+ 
+        // Get the Adapter contract instance 
+        IAdapter iAdapter = IAdapter(DST_OFT_ADDRESS); 
+ 
+        // Define the send parameters 
+        uint256 tokensToSend = 0.0001 ether; 
+ 
+        bytes memory options = OptionsBuilder 
+            .newOptions() 
+            .addExecutorLzReceiveOption(200000, 0); 
+ 
+        SendParam memory sendParam = SendParam( 
+            uint32(SEPOLIA_ENDPOINT_ID), 
+            bytes32(uint256(uint160(signer))), 
+            tokensToSend, 
+            tokensToSend, 
+            options, 
+            "", 
+            "" 
+        ); 
+ 
+        // Quote the send fee 
+        MessagingFee memory fee = iAdapter.quoteSend(sendParam, false); 
+        console.log("Native fee: %d", fee.nativeFee);  
+ 
+        // Send the tokens 
+        iAdapter.send{value: fee.nativeFee}(sendParam, fee, signer); 
  
         console.log("Tokens bridged successfully!"); 
     } 

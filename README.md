@@ -65,14 +65,19 @@ $ anvil --help
 $ cast --help
 ```
 
+### add deps
 ```
-# add deps
 pw forge install OpenZeppelin/openzeppelin-contracts@v5.0.2 --no-commit
 pw forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v5.0.2 --no-commit
 pw forge install https://github.com/LayerZero-Labs/devtools --no-commit
 pw forge install https://github.com/LayerZero-Labs/layerzero-v2 --no-commit
 pw forge install https://github.com/GNSPS/solidity-bytes-utils --no-commit
+```
 
+### 部署ERC20
+合约文件位于src/ERC20.sol
+
+```
 # deploy sepolia adapter
 forge script script/MyAdapter.s.sol --rpc-url https://rpc.sepolia.org/ --broadcast
 
@@ -86,6 +91,9 @@ forge script script/MyOFT.s.sol --rpc-url https://sepolia.optimism.io --broadcas
 forge script script/Bridge.s.sol -s "setPeer()" --rpc-url https://rpc.sepolia.org/ --broadcast
 # token cross chain
 forge script script/Bridge.s.sol -s "bridge()" --rpc-url https://rpc.sepolia.org/ --broadcast
+
+# bridge L2 to L1
+forge script script/Bridge.s.sol -s "bridgeToL1()" --rpc-url https://sepolia.optimism.io --broadcast
 
 # query result
 cast call 0xA908254Fb22F0FCc29880f9A08F29eB48F013bad "balanceOf(address) (uint256)" 0x1220d2767171ea3a6F4a545efF23efaad4C80221  --rpc-url  https://sepolia.optimism.io
@@ -113,6 +121,17 @@ forge script script/Config.s.sol -s "getConfig(address,address,address,uint32)" 
   optionalDVNs:
 
 # get mantle config send lib
+forge script script/Config.s.sol -s "getConfig(address,address,address,uint32)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x7AE0a4846d6af3B82A5bd0F7a6a362784d9a2157 0x9A289B849b32FF69A95F8584a03343a33Ff6e5Fd 40161 --rpc-url https://rpc.sepolia.mantle.xyz
+== Logs ==
+  confirmations: 2
+  requiredDVNCount: 1
+  optionalDVNCount: 0
+  optionalDVNThreshold: 0
+  requiredDVNs
+  0x9454f0EABc7C4Ea9ebF89190B8bF9051A0468E03
+  optionalDVNs
+
+# get mantle config receive lib
 forge script script/Config.s.sol -s "getConfig(address,address,address,uint32)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x7AE0a4846d6af3B82A5bd0F7a6a362784d9a2157 0x8A3D588D9f6AC041476b094f97FF94ec30169d3D 40161 --rpc-url https://rpc.sepolia.mantle.xyz
 == Logs ==
   confirmations: 2
