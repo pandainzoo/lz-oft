@@ -16,9 +16,9 @@ contract Config is Script {
     uint32 public constant EXECUTOR_CONFIG_TYPE = 1;
     uint32 public constant ULN_CONFIG_TYPE = 2;
 
-    function getConfig(address _endpoint,address _oapp, address _lib, uint32 remoteEid) external view {
+    function getConfig(address _endpoint,address _oapp, address _lib, uint32 _remoteEid) external view {
         ILayerZeroEndpointV2 endpoint = ILayerZeroEndpointV2(_endpoint);
-        bytes memory receiveUlnConfigBytes = endpoint.getConfig(_oapp, _lib, remoteEid, ULN_CONFIG_TYPE);
+        bytes memory receiveUlnConfigBytes = endpoint.getConfig(_oapp, _lib, _remoteEid, ULN_CONFIG_TYPE);
 
         UlnConfig memory config = abi.decode(receiveUlnConfigBytes, (UlnConfig));
         console.log("confirmations: %d",config.confirmations);
@@ -35,17 +35,35 @@ contract Config is Script {
         }
     }
 
-    function setConfig(address _endpoint,address oapp,  address lib, address[] memory DVNs, uint32 remoteEid, uint64 confirmations) external {
+    function setConfig(address _endpoint, address _oapp, address _lib, address[] memory _dvns, uint32 _remoteEid, uint64 _confirmations) external {
         ILayerZeroEndpointV2 endpoint = ILayerZeroEndpointV2(_endpoint);
-        address[] memory requiredDVNs = new address[](DVNs.length); // place LZ DVN at start, switch to Mantle's in the future
+        SetConfigParam[] memory setConfigParams = genSetConfigParam(_dvns, _remoteEid, _confirmations);
+
+        uint256 privateKey = vm.envUint("PRIVATE_KEY");
+        vm.startBroadcast(privateKey); 
+        endpoint.setConfig(_oapp, _lib, setConfigParams);
+        vm.stopBroadcast();
+    }
+
+    function setConfigCalldata(address _oapp, address _lib, address[] memory _dvns, uint32 _remoteEid, uint64 _confirmations) external view {
+        SetConfigParam[] memory setConfigParams = genSetConfigParam(_dvns, _remoteEid, _confirmations);
+
+        // abi.encodeWithSignature("setConfig(address,address,(uint32,uint32,bytes)[])", _oapp, _lib, setConfigParams);
+        bytes memory callData = abi.encodeCall(IMessageLibManager.setConfig, (_oapp, _lib, setConfigParams));
+        console.log("setConfig tx calldata:");
+        console.logBytes(callData);
+    }
+
+    function genSetConfigParam(address[] memory _dvns, uint32 _remoteEid, uint64 _confirmations) public pure returns (SetConfigParam[] memory) {
+        address[] memory requiredDVNs = new address[](_dvns.length);
         address[] memory optionalDVNs = new address[](0);
 
-        for (uint256 i; i < DVNs.length; i++) {
-            requiredDVNs[i] = DVNs[i];
+        for (uint256 i; i < _dvns.length; i++) {
+            requiredDVNs[i] = _dvns[i];
         }
 
         UlnConfig memory config = UlnConfig({
-            confirmations: confirmations,
+            confirmations: _confirmations,
             requiredDVNCount: uint8(requiredDVNs.length),
             requiredDVNs: requiredDVNs,
             optionalDVNThreshold: 0,
@@ -54,16 +72,12 @@ contract Config is Script {
         });
 
         SetConfigParam memory scp = SetConfigParam({
-            eid: remoteEid,
+            eid: _remoteEid,
             configType: ULN_CONFIG_TYPE,
             config: abi.encode(config)
         });
         SetConfigParam[] memory setConfigParams = new SetConfigParam[](1);
         setConfigParams[0] = scp;
-
-        uint256 privateKey = vm.envUint("PRIVATE_KEY"); 
-        vm.startBroadcast(privateKey); 
-        endpoint.setConfig(oapp, lib, setConfigParams);
-        vm.stopBroadcast();
+        return setConfigParams;
     }
 }

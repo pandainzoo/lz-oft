@@ -7,8 +7,8 @@ import "../src/MyOFT.sol";
 contract MyOFTScript is Script {
     function run() public { 
         // Setup 
-        address SEPOLIA_ADAPTER_ADDRESS = vm.envAddress("SEPOLIA_ADAPTER_ADDRESS");
-        uint256 SEPOLIA_ENDPOINT_ID = vm.envUint("SEPOLIA_ENDPOINT_ID");
+        address SRC_ADAPTER_ADDRESS = vm.envAddress("SRC_ADAPTER_ADDRESS");
+        uint256 SRC_ENDPOINT_ID = vm.envUint("SRC_ENDPOINT_ID");
         address DST_LAYERZERO_ENDPOINT = vm.envAddress("DST_LAYERZERO_ENDPOINT");
 
         uint256 privateKey = vm.envUint("PRIVATE_KEY"); 
@@ -22,10 +22,10 @@ contract MyOFTScript is Script {
             vm.addr(privateKey) // Wallet address of signer 
         ); 
  
-        // Hook up Mantle OFT to Sepolia's adapter 
+        // Hook up Mantle OFT to source chain adapter
         myOFT.setPeer( 
-            uint32(SEPOLIA_ENDPOINT_ID), 
-            bytes32(uint256(uint160(SEPOLIA_ADAPTER_ADDRESS))) 
+            uint32(SRC_ENDPOINT_ID),
+            bytes32(uint256(uint160(SRC_ADAPTER_ADDRESS)))
         ); 
         vm.stopBroadcast(); 
     } 
