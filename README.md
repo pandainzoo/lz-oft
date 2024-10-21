@@ -133,7 +133,7 @@ forge script script/Config.s.sol -s "setConfig(address,address,address,address[]
 forge script script/Config.s.sol -s "setConfig(address,address,address,address[],uint32,uint64)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x7AE0a4846d6af3B82A5bd0F7a6a362784d9a2157 0x8A3D588D9f6AC041476b094f97FF94ec30169d3D \[0xa8b188a6eb601d0cc82685d912718feca8d36e2f\] 40161 2 --rpc-url https://rpc.sepolia.mantle.xyz --broadcast
 ```
 
-# 查询layerzero config配置
+### 查询layerzero config配置
 ```
 forge script script/Config.s.sol -s "getConfig(address,address,address,uint32)" 0x6EDCE65403992e310A62460808c4b910D972f10f 0x2838479f0dbb534D315Ad24e0855a89230866044 0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE 40246 --rpc-url https://rpc.sepolia.org
 == Logs ==

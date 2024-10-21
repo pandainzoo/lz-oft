@@ -6,9 +6,7 @@ import "forge-std/console.sol";
 import "forge-std/Script.sol";
 
 // LayerZero imports
-import { ExecutorConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol";
-import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
-import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
+import { ILayerZeroEndpointV2,IMessageLibManager } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { SetConfigParam } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol";
 import { UlnConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol";
 
@@ -45,7 +43,7 @@ contract Config is Script {
         vm.stopBroadcast();
     }
 
-    function setConfigCalldata(address _oapp, address _lib, address[] memory _dvns, uint32 _remoteEid, uint64 _confirmations) external view {
+    function setConfigCalldata(address _oapp, address _lib, address[] memory _dvns, uint32 _remoteEid, uint64 _confirmations) external pure {
         SetConfigParam[] memory setConfigParams = genSetConfigParam(_dvns, _remoteEid, _confirmations);
 
         // abi.encodeWithSignature("setConfig(address,address,(uint32,uint32,bytes)[])", _oapp, _lib, setConfigParams);
